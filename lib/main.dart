@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-
 import 'constant.dart';
 import 'login_screen.dart';
-// E05bNLDTY9Z4aaU21oSwe0GKRPP2
+import 'package:firebase_core/firebase_core.dart';
 
-void main(){
-  runApp(InitialScreen());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Ensure Firebase is initialized before runApp
+  runApp(const InitialScreen());
 }
+
 class InitialScreen extends StatelessWidget {
   const InitialScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
-      title: appName,
+      home: const LoginScreen(),
+      title: appName, // Ensure `appName` is defined in `constant.dart`
       debugShowCheckedModeBanner: false,
-      
     );
   }
 }
