@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lastlogin/colors.dart';
 import 'package:lastlogin/home_screen.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lastlogin/newacc.dart';
 
 import 'constant.dart';
 
@@ -18,6 +19,20 @@ GlobalKey<FormState> formkey = GlobalKey<FormState>();
 String? _email;
 String?_password;
 
+void signIn(BuildContext context) async {
+  if (_email != null && _password != null) {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: _email!, password: _password!)
+        .then((authUser) {
+      if(authUser.user!=null);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+    }).catchError((onError) {
+      print(onError);
+    });
+  } else {
+    print("Email and password cannot be null");
+  }
+}
 
 
 
@@ -146,18 +161,19 @@ String?_password;
                 height: height*0.08,
                 width: width-30,
                 child: TextButton(
-                  onPressed:() {
+                  onPressed:() async {
                     if(formkey.currentState?.validate() ?? false){
                       formkey.currentState?.save();
+                      signIn(context);
                      
-                      if(_email == "test@gmail.com" && _password == "root@123"){
+                      // if(_email == "test@gmail.com" && _password == "root@123"){
                         
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeScreen(),),);
-                        FocusScope.of(context).unfocus();
-                      }
-                      else{
-                        print("Invalid Login Details");
-                      }
+                      //   Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeScreen(),),);
+                      //   FocusScope.of(context).unfocus();
+                      // }
+                      // else{
+                      //   print("Invalid Login Details");
+                      // }
                     }
                   }, child:Text("Login to account",style: TextStyle(
                     color: Colors.white,
@@ -171,7 +187,7 @@ String?_password;
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                        Text("Don't have an account?"),
-                  TextButton(onPressed: () {}, child: Text("Create Account",style: TextStyle(
+                  TextButton(onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateAccount()));}, child: Text("Create Account",style: TextStyle(
                     color:Colors.blue,fontSize: 16
                   ),))
                     ],
